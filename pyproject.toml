@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "langchain-play"
+version = "0.1.0"
+description = "An example of how to wrap LangChain with FastAPI"
+authors = ["Shane Witbeck <shane@digitalsanctum.com>"]
+readme = "README.md"
+packages = [{include = "langchain_play"}]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+openai = "^0.27.8"
+langchain = "^0.0.226"
+fastapi = "^0.99.1"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
