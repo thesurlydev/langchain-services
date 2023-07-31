@@ -1,6 +1,10 @@
-POST http://localhost:8000
+POST http://localhost:8000/questions
 Content-Type: application/json
 
 {
   "query": "whats the capital of usa"
 }
+
+
+GET http://localhost:8000/tickers/google
+Content-Type: application/json
