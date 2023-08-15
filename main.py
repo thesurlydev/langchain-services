@@ -23,8 +23,10 @@ app.add_middleware(CORSMiddleware,
                    allow_headers=["*"]
                    )
 
+
 class JobDescription(BaseModel):
     description: str
+
 
 class Question(BaseModel):
     query: str
@@ -162,6 +164,7 @@ def job_parse(job_description: JobDescription):
     out = output.content
     return json.loads(out)
 
+
 @app.post('/questions')
 def answer_query(question: Question):
     query = question.query
@@ -171,6 +174,7 @@ def answer_query(question: Question):
     output = chat(message)
     answer = Answer(query=query, answer=output.content)
     return answer
+
 
 @app.get('/companies/{name}/logo')
 def company_info(name: str):
@@ -186,6 +190,7 @@ def company_info(name: str):
     output = chat(message)
     out = output.content
     return json.loads(out)
+
 
 @app.get('/companies/{name}/focus')
 def company_info(name: str):
@@ -205,6 +210,8 @@ def company_info(name: str):
     output = chat(message)
     out = output.content
     return json.loads(out)
+
+
 @app.get('/companies/{name}/address')
 def company_info(name: str):
     prompt = """
@@ -219,6 +226,8 @@ def company_info(name: str):
     output = chat(message)
     out = output.content
     return json.loads(out)
+
+
 @app.get('/companies/{name}')
 def company_info(name: str):
     prompt = """
@@ -236,6 +245,7 @@ def company_info(name: str):
     out = output.content
     return json.loads(out)
 
+
 @app.get('/companies/{name}/github')
 def company_info(name: str):
     prompt = """
@@ -250,6 +260,8 @@ def company_info(name: str):
     output = chat(message)
     out = output.content
     return json.loads(out)
+
+
 @app.get('/jd/parse')
 def parse_jd(job_description: JobDescription):
     prompt = """
