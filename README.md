@@ -1,13 +1,14 @@
 # langchain-services
 
-An example of how to wrap LangChain with FastAPI.
+Various [FastAPI](https://fastapi.tiangolo.com/) endpoints backed by [LangChain](https://langchain.com/).
 
-The following will run `main.py` which wraps a simple example of [LangChain](https://langchain.com/) with [FastAPI](https://fastapi.tiangolo.com/)
+Two endpoints are currently used by another project, [cover-letter](https://github.com/digitalsanctum/cover-letter), which is used for generating employment cover letters.
 
 ## prerequisites
 
 * [poetry](https://python-poetry.org/)
 * [uvicorn](https://www.uvicorn.org/) - an ASGI web server implementation for Python
+* API keys for SERPAPI and OpenAI.
 
 ## run
 
