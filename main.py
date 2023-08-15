@@ -23,6 +23,8 @@ app.add_middleware(CORSMiddleware,
                    allow_headers=["*"]
                    )
 
+class JobDescription(BaseModel):
+    description: str
 
 class Question(BaseModel):
     query: str
@@ -120,7 +122,8 @@ def agent(question: Question):
         Tool(
             name="Search",
             func=search.run,
-            description="useful for when you need to answer questions about current events. You should ask targeted questions"
+            description="useful for when you need to answer questions about current events and news such as the current "
+                        "street address of a company or recent news about a company. You should ask targeted questions"
         ),
         Tool(
             name="Calculator",
@@ -135,6 +138,29 @@ def agent(question: Question):
     answer = Answer(query=query, answer=output)
     return answer
 
+
+@app.post('/jobs/parse')
+def job_parse(job_description: JobDescription):
+    prompt = """
+        Given a job description parse it for specific information such as: 
+        company name, 
+        technologies, 
+        list of qualifications, 
+        list of things about the role, 
+        salary range, 
+        list of benefits,
+        list of requirements, 
+        a paragraph about the team,
+        a paragraph about what the company does.
+        Return the parsed information in valid json format with snake casing. nothing else. If any data is not available, then return an empty string or array. Here is the job description {0}
+        """
+    query = prompt.format(job_description.description)
+    openai_api_key = os.environ.get("OPENAI_API_KEY")
+    chat = ChatOpenAI(temperature=0, openai_api_key=openai_api_key)
+    message = [HumanMessage(content=query)]
+    output = chat(message)
+    out = output.content
+    return json.loads(out)
 
 @app.post('/questions')
 def answer_query(question: Question):
@@ -196,12 +222,42 @@ def company_info(name: str):
 @app.get('/companies/{name}')
 def company_info(name: str):
     prompt = """
-    Given the name of a company return the company name, ratings from indeed.com and glassdoor.com, top revenue producing products, social media urls, estimated annual revenue in millions of dollars, associated companies and relationship and website, company description, sector, industry, the year it started, ticker symbol, headquarters address, coordinates of headquarters location, exchange,
+    Given the name of a company return the company name, github organization url, ratings from indeed.com and glassdoor.com, top revenue producing products, social media urls, estimated annual revenue in millions of dollars, associated companies and relationship and website, company description, sector, industry, the year it started, ticker symbol, headquarters address, coordinates of headquarters location, exchange,
     number of employees, the url on linkedin.com, glassdoor.com and indeed.com and teamblind.com, website, careers url, and top five competitors including website.
-    Return only the company name, ratings from indeed.com and glassdoor.com, top revenue producing products, social media urls, estimated annual revenue, associated companies and relationship and website, company description, sector, industry, the year it started, ticker symbol, exchange, headquarters address, coordinates of headquarters location, number of employees, urls,
+    Return only the company name, github organization url, ratings from indeed.com and glassdoor.com, top revenue producing products, social media urls, estimated annual revenue, associated companies and relationship and website, company description, sector, industry, the year it started, ticker symbol, exchange, headquarters address, coordinates of headquarters location, number of employees, urls,
     website, careers url, and top five competitors including website in json format with snake casing. nothing else. the name of the company is {0}
     """
     query = prompt.format(name)
+    openai_api_key = os.environ.get("OPENAI_API_KEY")
+
+    chat = ChatOpenAI(temperature=0, openai_api_key=openai_api_key)
+    message = [HumanMessage(content=query)]
+    output = chat(message)
+    out = output.content
+    return json.loads(out)
+
+@app.get('/companies/{name}/github')
+def company_info(name: str):
+    prompt = """
+    Given the name of a company return the company name and github organization url.
+    Return only the company name and github organization url in json format with snake casing. nothing else. the name of the company is {0}
+    """
+    query = prompt.format(name)
+    openai_api_key = os.environ.get("OPENAI_API_KEY")
+
+    chat = ChatOpenAI(temperature=0, openai_api_key=openai_api_key)
+    message = [HumanMessage(content=query)]
+    output = chat(message)
+    out = output.content
+    return json.loads(out)
+@app.get('/jd/parse')
+def parse_jd(job_description: JobDescription):
+    prompt = """
+        Given the content of a job description, parse the job title, company name and salary range. 
+        Return only the company name, job title and salary range in json format with snake casing. nothing else.
+        Here's the content of the job description: {0}.
+        """
+    query = prompt.format(job_description.description)
     openai_api_key = os.environ.get("OPENAI_API_KEY")
 
     chat = ChatOpenAI(temperature=0, openai_api_key=openai_api_key)
