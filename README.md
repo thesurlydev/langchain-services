@@ -1,4 +1,4 @@
-# langchain-play
+# langchain-services
 
 An example of how to wrap LangChain with FastAPI.
 
@@ -16,6 +16,7 @@ Install dependencies and start the service:
 ```shell
 poetry install
 export OPENAI_API_KEY="your key here"
+export SERPAPI_API_KEY="your key here"
 uvicorn main:app --reload
 ```
 
@@ -25,12 +26,13 @@ uvicorn main:app --reload
 curl -s "http://localhost:8000" -d '{"query": "whats the capital of usa"}' -H 'Content-Type: application/json' | jq
 ```
 
+or using the IntelliJ HTTP Client:
 
 ```shell
 ijhttp -L VERBOSE test.http
 ```
 
-The above requires the IntelliJ HTTP Client. You can install via: 
+### IntelliJ HTTP Client install 
 
 ```shell
 curl -f -L -o ijhttp.zip "https://jb.gg/ijhttp/latest"
