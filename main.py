@@ -13,6 +13,8 @@ from langchain.chat_models import ChatOpenAI
 from langchain.schema import HumanMessage
 from langchain.tools import BaseTool
 from pydantic import BaseModel, Field
+# See https://github.com/peopledatalabs/peopledatalabs-python
+from peopledatalabs import PDLPY
 
 app = FastAPI()
 
@@ -205,7 +207,7 @@ def company_info(name: str):
     query = prompt.format(name)
     openai_api_key = os.environ.get("OPENAI_API_KEY")
 
-    chat = ChatOpenAI(temperature=0.5, openai_api_key=openai_api_key)
+    chat = ChatOpenAI(temperature=0.7, openai_api_key=openai_api_key)
     message = [HumanMessage(content=query)]
     output = chat(message)
     out = output.content
@@ -277,3 +279,25 @@ def parse_jd(job_description: JobDescription):
     output = chat(message)
     out = output.content
     return json.loads(out)
+
+@app.get('/pdl/companies/{name}')
+def people_data_labs_company(name: str):
+    pdl_key = os.environ.get("PEOPLE_DATA_LABS_API_KEY")
+
+    # Create a client, specifying your API key
+    CLIENT = PDLPY(
+        api_key=pdl_key
+    )
+
+    # Create a parameters JSON object
+    QUERY_STRING = {
+        "name": name,
+        "titlecase":"true"
+    }
+
+    # Pass the parameters object to the Company Enrichment API
+    response = CLIENT.company.enrichment(**QUERY_STRING)
+
+    # Print the API response
+    # print(response.text)
+    return json.loads(response.text)
