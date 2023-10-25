@@ -9,7 +9,7 @@ packages = [{include = "langchain_services"}]
 [tool.poetry.dependencies]
 python = "^3.11"
 openai = "^0.27.8"
-langchain = "0.0.312"
+langchain = "0.0.317"
 fastapi = "^0.101.1"
 newsapi-python = "^0.2.7"
 uvicorn = "^0.23.2"
