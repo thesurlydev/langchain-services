@@ -3,8 +3,10 @@ import os
 from datetime import datetime, timedelta
 from typing import Type
 
+import openai
+import tiktoken
 import yfinance as yf
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from langchain import LLMMathChain, SerpAPIWrapper
 from langchain.agents import AgentType
@@ -12,9 +14,11 @@ from langchain.agents import initialize_agent, Tool
 from langchain.chat_models import ChatOpenAI
 from langchain.schema import HumanMessage
 from langchain.tools import BaseTool
-from pydantic import BaseModel, Field
-# See https://github.com/peopledatalabs/peopledatalabs-python
 from peopledatalabs import PDLPY
+from pydantic import BaseModel, Field
+
+# See https://github.com/peopledatalabs/peopledatalabs-python
+# from peopledatalabs import PDLPY
 
 app = FastAPI()
 
@@ -113,6 +117,13 @@ class StockPerformanceTool(BaseTool):
         raise NotImplementedError("get_stock_performance does not support async")
 
 
+@app.get('/transcribe')
+def transcribe():
+    audio_file = open("/home/shane/projects/transcribe-rust/testing-123.wav", "rb")
+    transcript = openai.Audio.transcribe(model="whisper-1", file=audio_file, response_format="text")
+    return transcript
+
+
 @app.post('/agent')
 def agent(question: Question):
     print(question)
@@ -156,7 +167,8 @@ def job_parse(job_description: JobDescription):
         list of requirements, 
         a paragraph about the team,
         a paragraph about what the company does.
-        Return the parsed information in valid json format with snake casing. nothing else. If any data is not available, then return an empty string or array. Here is the job description {0}
+        Return the parsed information in valid json format with snake casing. nothing else. If any data is not 
+        available, then return an empty string or array. Here is the job description {0}
         """
     query = prompt.format(job_description.description)
     openai_api_key = os.environ.get("OPENAI_API_KEY")
@@ -264,6 +276,47 @@ def company_info(name: str):
     return json.loads(out)
 
 
+# Take string input and return number of tokens
+# Usage: https://github.com/openai/openai-cookbook/blob/main/examples/How_to_count_tokens_with_tiktoken.ipynb
+def num_tokens(text_data: str) -> int:
+    """Returns the number of tokens in a text string."""
+    # encoding = tiktoken.encoding_for_model("gpt-3.5-turbo")
+    encoding = tiktoken.get_encoding("cl100k_base")
+    num_tokens = len(encoding.encode(text_data))
+    return num_tokens
+
+
+@app.post('/tokens')
+# Usage using pipe to curl:
+# echo "foo" | curl -X POST -H "Content-Type: text/plain" --data-binary @- http://127.0.0.1:8000/tokens
+async def tokens(request: Request) -> int:
+    """Returns the number of tokens in a text string."""
+    text_data = await request.body()
+    text_data = text_data.decode('utf-8')
+    return num_tokens(text_data)
+
+
+# TODO: need to make sure the JD text doesn't exceed the OpenAI token limit
+@app.post("/jd/")
+async def jd(request: Request):
+    text_data = await request.body()
+    text_data = text_data.decode('utf-8')
+    prompt = """
+            Given the content of a job description, parse the job title, company name and salary range. 
+            Return only the company name, job title and salary range in json format with snake casing. nothing else.
+            Here's the content of the job description: 
+            {0}
+            """
+    query = prompt.format(text_data)
+    openai_api_key = os.environ.get("OPENAI_API_KEY")
+
+    chat = ChatOpenAI(temperature=0, openai_api_key=openai_api_key)
+    message = [HumanMessage(content=query)]
+    output = chat(message)
+    out = output.content
+    return json.loads(out)
+
+
 @app.get('/jd/parse')
 def parse_jd(job_description: JobDescription):
     prompt = """
@@ -280,6 +333,7 @@ def parse_jd(job_description: JobDescription):
     out = output.content
     return json.loads(out)
 
+
 @app.get('/pdl/companies/{name}')
 def people_data_labs_company(name: str):
     pdl_key = os.environ.get("PEOPLE_DATA_LABS_API_KEY")
@@ -292,7 +346,7 @@ def people_data_labs_company(name: str):
     # Create a parameters JSON object
     QUERY_STRING = {
         "name": name,
-        "titlecase":"true"
+        "titlecase": "true"
     }
 
     # Pass the parameters object to the Company Enrichment API

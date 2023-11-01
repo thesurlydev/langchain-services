@@ -1,0 +1,15 @@
+POST http://localhost:8000/tokens
+Content-Type: text/plain
+
+* How-to guides and videos
+* Comprehensive and systematic steps to diagnose and fix issues
+* Find a mechanic
+* Parts and consumables inventory and reminders
+* Buyer's and Seller's guides
+* Vendors
+* Specifications
+* Clubs and Events
+* Detailed part information
+* Maintenance records and reminders for upcoming recommended services.
+* Take a picture of service records to easily import
+* Integrate with nearby dealers and service shops

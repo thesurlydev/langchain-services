@@ -1,8 +1,80 @@
-POST http://localhost:8000/questions
+POST http://localhost:8000/jobs/parse
 Content-Type: application/json
 
 {
-  "query": "whats the capital of usa"
+  "description": "Join Axon and be a Force for Good.
+At Axon, we’re on a mission to Protect Life. We’re explorers, pursuing society’s most critical safety and justice issues with our ecosystem of devices and cloud software. Like our products, we work better together. We connect with candor and care, seeking out diverse perspectives from our customers, communities and each other.
+
+Life at Axon is fast-paced, challenging and meaningful. Here, you’ll take ownership and drive real change. Constantly grow as you work hard for a mission that matters at a company where you matter.
+
+Our team
+Our mission is to protect life and preserve the truth. The Axon Federal R&D team works with Federal agencies, both civilian and defense, to create solutions that address the scale, scope, and nuances of their current needs and provide technologies they will use in the future. Our mandate covers solutions ranging the breadth of Axon products and services - from evidence management to real-time operations to hardware - plus things we haven’t invented yet. Additionally, we work closely with our partners in Axon Information Security to ensure we are compliant with the latest Federal standards for information security (FedRAMP for civilian customers and Department of Defense Cloud Computing Impact Level). We tackle interesting, diverse and challenging problems on a regular basis.
+
+Our team is growing rapidly and is looking for a deeply technical engineer to work on large scale projects, both internal to the Federal team and across Axon product pillars. If you enjoy collaboratively leading the technical direction of engineering teams, and find our mission compelling, then this role is for you.
+
+We believe that happy teams take good care of their customers, so we foster a friendly, open, introspective team culture that encourages everyone to speak their mind and deliberately avoids red tape, unnecessary rituals, politics, and jerks.
+
+Your Impact
+You are a Staff-level Software Engineer with experience building large-scale, mission-critical software applications from blank paper to production, and are excited about the care, feeding and growth of the engineering organizations that build them. You have deep interest in backend technologies, networking, and are passionate about designing for availability and performance. You jump into deep technical challenges and stay abreast of new technologies. You are passionate about understanding the needs of our varied customers and ensuring they are met.
+
+Come work in an exciting environment where you use your passion, experience, and analytical skills to help bring new solutions to public safety and leave a positive impact on the world.
+
+
+What You’ll Do
+Location: Seattle, WA / Remote, United States
+Reports to: Federal Engineering Manager
+Direct Reports: None
+
+Set a high technical bar for the team through deep technical insights and architecture design reviews
+Mentor engineers
+Work across teams with Product, Design, and Engineering to solve some of our biggest technical challenges for our customers
+Improve our Engineering SDLC, including long-term roadmaps and scalability
+Build services that adhere to our high bar on availability and performance in this mission-critical space while remaining compliant with Federal security requirements
+What You Bring
+8+ years of experience in software engineering
+You write beautiful, simple, maintainable code for backend microservices
+Experience building complex and impactful software in a team environment
+Deep skill in driving technical solutions across multiple teams
+Backend service experience in managed languages such as Java, Scala, Go, C#, or similar
+Deep experience designing and delivering high-availability, scalable cloud-based systems
+Deep knowledge of both public and service networking
+Interest in helping to set the technical and organizational direction for a growing engineering team
+Experience with Federal services compliance (FedRAMP/IL4/IL5), video, or firmware a definite plus
+
+Benefits that Benefit You
+Competitive salary and 401k with employer match
+Discretionary paid time off
+Paid parental leave for all
+Medical, Dental, Vision plans
+Fitness Programs
+Emotional & Mental Wellness support
+Learning & Development programs
+And yes, we have snacks in our offices
+Benefits listed herein may vary depending on the nature of your employment and the location where you work.
+
+The Pay: Axon is a total compensation company, meaning compensation is made up of base pay, bonus, and stock awards. The starting base pay for this role is between USD 148,000 in the lowest geographic market and USD 285,000 in the highest geographic market. The on target earnings range for this role is between USD 296,000 in the lowest geographic market and USD 569,000 in the highest geographic market. The actual base pay is dependent upon many factors, such as: level, function, training, transferable skills, work experience, business needs, geographic market, and often a combination of all these factors. Our benefits offer an array of options to help support you physically, financially and emotionally through the big milestones and in your everyday life. To see more details on our benefits offerings please visit www.axon.com/careers/benefits (http://www.axon.com/careers/benefits).
+
+
+
+#LI-Remote
+
+
+
+Don’t meet every single requirement? That's ok. At Axon, we Aim Far. We think big with a long-term view because we want to reinvent the world to be a safer, better place. We are also committed to building diverse teams that reflect the communities we serve.
+
+Studies have shown that women and people of color are less likely to apply to jobs unless they check every box in the job description. If you’re excited about this role and our mission to Protect Life but your experience doesn’t align perfectly with every qualification listed here, we encourage you to apply anyways. You may be just the right candidate for this or other roles.
+
+
+
+Important Notes
+
+The above job description is not intended as, nor should it be construed as, exhaustive of all duties, responsibilities, skills, efforts, or working conditions associated with this job. The job description may change or be supplemented at any time in accordance with business needs and conditions.
+
+Some roles may also require legal eligibility to work in a firearms environment.
+
+Axon’s mission is to Protect Life and is committed to the well-being and safety of its employees as well as Axon’s impact on the environment. All Axon employees must be aware of and committed to the appropriate environmental, health, and safety regulations, policies, and procedures. Axon employees are empowered to report safety concerns as they arise and activities potentially impacting the environment.
+
+We are an equal opportunity employer that promotes justice, advances equity, values diversity and fosters inclusion. We’re committed to hiring the best talent — regardless of race, creed, color, ancestry, religion, sex (including pregnancy), national origin, sexual orientation, age, citizenship status, marital status, disability, gender identity, genetic information, veteran status, or any other characteristic protected by applicable laws, regulations and ordinances — and empowering all of our employees so they can do their best work. If you have a disability or special need that requires assistance or accommodation during the application or the recruiting process, please email recruitingops@axon.com. Please note that this email address is for accommodation purposes only. Axon will not respond to inquiries for other purposes."
 }
 
 
