@@ -8,10 +8,14 @@ import tiktoken
 import yfinance as yf
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
-from langchain import LLMMathChain, SerpAPIWrapper
+from langchain import LLMMathChain, SerpAPIWrapper, OpenAI
 from langchain.agents import AgentType
 from langchain.agents import initialize_agent, Tool
+from langchain.chains import AnalyzeDocumentChain
+from langchain.chains.question_answering import load_qa_chain
+from langchain.chains import create_extraction_chain
 from langchain.chat_models import ChatOpenAI
+from langchain.output_parsers import PydanticOutputParser
 from langchain.schema import HumanMessage
 from langchain.tools import BaseTool
 from peopledatalabs import PDLPY
@@ -45,7 +49,13 @@ class Answer(BaseModel):
 
 @app.get('/')
 def read_root():
-    return {"Hello": "world"}
+    return {
+        "message": "Hello from langchain-services",
+        "help": {
+            "docs": "http://localhost:8000/docs",
+            "redoc": "http://localhost:8000/redoc"
+        }
+    }
 
 
 class CurrentStockPriceInput(BaseModel):
@@ -296,25 +306,23 @@ async def tokens(request: Request) -> int:
     return num_tokens(text_data)
 
 
-# TODO: need to make sure the JD text doesn't exceed the OpenAI token limit
+class JobDescriptionData(BaseModel):
+    company_name: str
+    # Add other fields as needed
+
+
 @app.post("/jd/")
 async def jd(request: Request):
     text_data = await request.body()
     text_data = text_data.decode('utf-8')
-    prompt = """
-            Given the content of a job description, parse the job title, company name and salary range. 
-            Return only the company name, job title and salary range in json format with snake casing. nothing else.
-            Here's the content of the job description: 
-            {0}
-            """
-    query = prompt.format(text_data)
     openai_api_key = os.environ.get("OPENAI_API_KEY")
+    llm = OpenAI(openai_api_key=openai_api_key, temperature=0, model="gpt-3.5-turbo")
 
-    chat = ChatOpenAI(temperature=0, openai_api_key=openai_api_key)
-    message = [HumanMessage(content=query)]
-    output = chat(message)
-    out = output.content
-    return json.loads(out)
+    parser = PydanticOutputParser(pydantic_object=JobDescriptionData)
+
+    doc_chain = AnalyzeDocumentChain(parser=parser)
+    output = doc_chain.run(input_document=text_data)
+    return output
 
 
 @app.get('/jd/parse')

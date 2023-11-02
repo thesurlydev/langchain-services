@@ -1,0 +1,10 @@
+#.env
+.git
+.gitignore
+.idea
+.sqlx
+db
+images
+target
+*.md
+flyway.*
