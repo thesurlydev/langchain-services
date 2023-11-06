@@ -76,12 +76,16 @@ def health():
 
 
 @app.get('/')
-def read_root():
+def home(request: Request):
+    domain=request.base_url
+    params=request.query_params
+    docs=f"{domain}docs?{params}"
+    redoc=f"{domain}redoc?{params}"
     return {
         "message": "Hello from langchain-services",
         "help": {
-            "docs": "http://localhost:8000/docs",
-            "redoc": "http://localhost:8000/redoc"
+            "docs": f"{docs}",
+            "redoc": f"{redoc}"
         }
     }
 
