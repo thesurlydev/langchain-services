@@ -18,6 +18,7 @@ Install dependencies and start the service:
 poetry install
 export OPENAI_API_KEY="your key here"
 export SERPAPI_API_KEY="your key here"
+export LANGCHAIN_SERVICES_API_KEY="your key here"
 uvicorn main:app --reload
 ```
 

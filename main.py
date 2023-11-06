@@ -8,12 +8,11 @@ import tiktoken
 import yfinance as yf
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 from langchain import LLMMathChain, SerpAPIWrapper, OpenAI
 from langchain.agents import AgentType
 from langchain.agents import initialize_agent, Tool
 from langchain.chains import AnalyzeDocumentChain
-from langchain.chains.question_answering import load_qa_chain
-from langchain.chains import create_extraction_chain
 from langchain.chat_models import ChatOpenAI
 from langchain.output_parsers import PydanticOutputParser
 from langchain.schema import HumanMessage
@@ -32,6 +31,28 @@ app.add_middleware(CORSMiddleware,
                    allow_methods=["*"],
                    allow_headers=["*"]
                    )
+
+exclude_from_auth_paths = ["/docs", "/redoc", "/openapi.json", "/favicon.ico"]
+
+
+@app.middleware("http")
+async def authenticate_requests(request: Request, call_next):
+    if request.url.path in exclude_from_auth_paths:
+        response = await call_next(request)
+    else:
+        api_key = request.query_params.get("api_key")
+
+        if api_key is None:
+            return JSONResponse(status_code=400, content="Missing api_key query parameter")
+
+        langchain_services_api_key = os.environ.get("LANGCHAIN_SERVICES_API_KEY")
+        if langchain_services_api_key is None:
+            return JSONResponse(status_code=500, content="Missing LANGCHAIN_SERVICES_API_KEY")
+
+        if api_key != langchain_services_api_key:
+            return JSONResponse(status_code=401, content="Invalid API key")
+        response = await call_next(request)
+    return response
 
 
 class JobDescription(BaseModel):
