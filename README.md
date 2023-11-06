@@ -10,7 +10,7 @@ Two endpoints are currently used by another project, [cover-letter](https://gith
 * [uvicorn](https://www.uvicorn.org/) - an ASGI web server implementation for Python
 * API keys for SERPAPI and OpenAI.
 
-## run
+## run locally
 
 Install dependencies and start the service:
 
@@ -21,6 +21,13 @@ export SERPAPI_API_KEY="your key here"
 export LANGCHAIN_SERVICES_API_KEY="your key here"
 uvicorn main:app --reload
 ```
+
+## deploy to fly.io
+
+```shell
+fly deploy --app langchain-services --vm-size shared-cpu-1x
+```
+
 
 ## test
 

@@ -32,7 +32,7 @@ app.add_middleware(CORSMiddleware,
                    allow_headers=["*"]
                    )
 
-exclude_from_auth_paths = ["/docs", "/redoc", "/openapi.json", "/favicon.ico"]
+exclude_from_auth_paths = ["/health", "/docs", "/redoc", "/openapi.json", "/favicon.ico"]
 
 
 @app.middleware("http")
@@ -66,6 +66,13 @@ class Question(BaseModel):
 class Answer(BaseModel):
     query: str
     answer: str
+
+
+@app.get('/health')
+def health():
+    return {
+        "status": "ok"
+    }
 
 
 @app.get('/')
